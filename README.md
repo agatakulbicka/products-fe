@@ -76,6 +76,8 @@ npm run type-check
 - **Modern Styling** - Tailwind CSS for rapid UI development
 - **Hot Module Replacement** - Instant updates during development
 - **Code Quality** - ESLint and TypeScript for code consistency
+- **API Integration** - OpenAPI-generated client for type-safe API calls
+- **Automated Code Generation** - API client and types generated from OpenAPI spec
 
 ## 🧩 Available Scripts
 
@@ -86,4 +88,40 @@ npm run type-check
 | `npm run preview` | Preview production build |
 | `npm run lint` | Run ESLint |
 | `npm run type-check` | Run TypeScript type checking |
+| `npm run generate:api` | Generate API client from OpenAPI spec |
+| `npm run generate:api-clean` | Clean and regenerate API client |
+
+## 🔌 OpenAPI Integration
+
+This project uses OpenAPI specification for automated API client generation:
+
+### API Specification
+- **Location**: `api/openapi.yaml`
+- **Generated Client**: `src/generated/api/`
+- **Service Layer**: `src/services/productsService.ts`
+
+### Workflow
+1. Update `api/openapi.yaml` with your backend team
+2. Run `npm run generate:api` to regenerate the TypeScript client
+3. Update service layer and Redux slices as needed
+4. TypeScript will ensure type safety across the application
+
+### Environment Configuration
+Create a `.env.local` file to configure the API URL:
+```bash
+VITE_API_URL=http://localhost:8080
+```
+
+### Development Mode
+When running in development mode (`npm run dev`), if the API server is not available, the application will automatically fall back to mock data so you can develop and test the UI without needing a backend server.
+
+## 🚦 Development Guidelines
+
+1. **Components**: Create reusable components in the `src/components/` directory
+2. **State Management**: Use Redux Toolkit slices for state management
+3. **Styling**: Use Tailwind CSS utility classes for styling
+4. **Type Safety**: Always define TypeScript interfaces for data structures
+5. **API Integration**: Use the generated API client and service layer
+6. **Code Quality**: Run `npm run lint` before committing changes
+7. **API Updates**: Regenerate client when OpenAPI spec changes
 
