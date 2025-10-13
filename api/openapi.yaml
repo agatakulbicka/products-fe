@@ -1,0 +1,212 @@
+openapi: 3.0.0
+info:
+  title: Products API
+  version: 1.0.0
+  description: A RESTful API for managing products built with Node.js, Express, and MongoDB
+  contact:
+    name: API Support
+    email: support@example.com
+
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /api/products:
+    get:
+      summary: Get all products with pagination
+      tags: [Products]
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: Page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: Number of items per page
+      responses:
+        '200':
+          description: List of products with pagination info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProducts'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/products/{id}:
+    get:
+      summary: Get single product by ID
+      tags: [Products]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Update product fields (partial update)
+      tags: [Products]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: Product ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpdate'
+      responses:
+        '200':
+          description: Product updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: No valid fields provided for update
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Product:
+      type: object
+      required: ['name', 'number']
+      properties:
+        id:
+          type: string
+          description: The auto-generated id of the product
+          example: 64f8a1b2c3d4e5f6a7b8c9d0
+        name:
+          type: string
+          description: The product name
+          example: Wireless Headphones
+        number:
+          type: string
+          description: The product number/SKU
+          example: WH-001
+        description:
+          type: string
+          description: The product description
+          example: High-quality wireless headphones with noise cancellation
+        images:
+          type: array
+          items:
+            type: string
+          description: Array of image URLs
+          example: ['headphones-front.jpg', 'headphones-side.jpg']
+        createdAt:
+          type: string
+          format: date-time
+          description: Product creation timestamp
+          example: 2023-10-13T10:30:00.000Z
+        updatedAt:
+          type: string
+          format: date-time
+          description: Product last update timestamp
+          example: 2023-10-13T10:30:00.000Z
+
+    ProductUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The product name
+          example: Updated Wireless Headphones
+        number:
+          type: string
+          description: The product number/SKU
+          example: WH-001-V2
+        description:
+          type: string
+          description: The product description
+          example: Updated high-quality wireless headphones
+        images:
+          type: array
+          items:
+            type: string
+          description: Array of image URLs
+          example: ['new-headphones-front.jpg']
+
+    PaginatedProducts:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        pagination:
+          type: object
+          properties:
+            currentPage:
+              type: integer
+              example: 1
+            totalPages:
+              type: integer
+              example: 5
+            totalProducts:
+              type: integer
+              example: 42
+            hasNext:
+              type: boolean
+              example: true
+            hasPrev:
+              type: boolean
+              example: false
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: Product not found

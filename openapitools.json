@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.16.0"
+  },
+  "generatorName": "typescript-axios",
+  "inputSpec": "./api/openapi.yaml",
+  "outputDir": "./src/generated/api",
+  "additionalProperties": {
+    "npmName": "products-api-client",
+    "npmVersion": "1.0.0",
+    "supportsES6": true,
+    "withInterfaces": true,
+    "modelPropertyNaming": "camelCase",
+    "apiPackage": "api",
+    "modelPackage": "models"
+  },
+  "globalProperties": {
+    "models": "",
+    "apis": "",
+    "supportingFiles": "Configuration.ts,index.ts"
+  }
+}
