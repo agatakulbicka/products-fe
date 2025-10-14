@@ -20,7 +20,6 @@ function ProductList() {
       }))
     }
   }
-  console.log('Products:', products)
 
   if (loading && products.length === 0) {
     return (
