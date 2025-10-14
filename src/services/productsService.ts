@@ -1,3 +1,4 @@
+import ProductsConverter from '../converters/ProductsListConverter'
 import { 
   Configuration, 
   ProductsApi, 
@@ -30,7 +31,7 @@ export class ProductsService {
         params?.page,
         params?.limit
       )
-      return response.data
+      return ProductsConverter.fromAPI(response.data)
     } catch (error) {
       console.error('Error fetching products:', error)
       
