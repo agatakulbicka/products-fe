@@ -1,4 +1,10 @@
-const ProductRow = ({ id, number, name }) => {
+interface ProductRowProps {
+  id?: string
+  number: string
+  name: string
+}
+
+const ProductRow = ({ number, name }: ProductRowProps) => {
   return <div className="px-6 py-4 hover:bg-gray-50">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">

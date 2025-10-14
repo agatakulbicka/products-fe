@@ -1,23 +1,17 @@
-import ProductList from './components/ProductList'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Layout from './components/Layout'
+import ProductsPage from './pages/ProductsPage'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Manage your product inventory with ease.
-          </p>
-        </div>
-      </header>
-      
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <ProductList />
-        </div>
-      </main>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/products" replace />} />
+          <Route path="products" element={<ProductsPage />} />
+        </Route>
+      </Routes>
+    </Router>
   )
 }
 
