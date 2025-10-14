@@ -4,8 +4,8 @@ import {
 } from '../generated/api'
 import { Product, ProductDetails, ProductsList } from '../types/product'
 import ProductsListConverter from '../converters/ProductsListConverter'
+import ProductDetailsConverter from '../converters/ProductDetailsConverter'
 
-// API Configuration
 const apiConfig = new Configuration({
   basePath: import.meta.env.VITE_API_URL || 'http://localhost:8000',
 })
@@ -66,15 +66,7 @@ export class ProductsService {
       const response = await productsApi.apiProductsIdGet(productId)
       // Map API response to our local type
       const apiProduct = response.data
-      return {
-        id: apiProduct.id || productId,
-        name: apiProduct.name || 'Unknown Product',
-        number: apiProduct.number || 'N/A',
-        description: apiProduct.description || '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        images: []
-      }
+      return ProductDetailsConverter.fromAPI(apiProduct)
     } catch (error) {
       console.error(`Error fetching product ${productId}:`, error)
       
@@ -118,23 +110,6 @@ export class ProductsService {
       console.error(`Error updating product ${productId}:`, error)
       throw error
     }
-  }
-
-  // Helper method to create a new product (would need to be added to OpenAPI spec)
-  // For now, we'll use a mock implementation
-  static async createProduct(productData: Omit<Product, 'id'>): Promise<Product> {
-    // This would call the actual POST endpoint once added to the OpenAPI spec
-    console.log('Creating product:', productData)
-    return {
-      id: Math.random().toString(36).substr(2, 9),
-      ...productData
-    }
-  }
-
-  // Helper method to delete a product (would need to be added to OpenAPI spec)
-  static async deleteProduct(productId: string): Promise<void> {
-    // This would call the actual DELETE endpoint once added to the OpenAPI spec
-    console.log(`Deleting product: ${productId}`)
   }
 }
 

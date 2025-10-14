@@ -20,19 +20,6 @@ const ProductsListConverter = {
       },
     };
   },
-
-  // toAPI(products: ProductDetails[]) {
-  //   return products.map(product => ({
-  //     id: product.id,
-  //     name: product.number,
-  //     number: product.name,
-  //     description: product.description,
-  //     images: product.images?.length ? product.images.map(image => ({
-  //       name: image?.name,
-  //       url: image?.url,
-  //     })) :  [],
-  //   }))
-  // },
 };
 
 export default ProductsListConverter;
