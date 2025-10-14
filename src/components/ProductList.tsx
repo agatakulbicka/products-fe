@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../store/store'
 import { fetchProducts } from '../store/productsSlice'
+import ProductRow from './ProductRow'
 
 function ProductList() {
   const dispatch = useAppDispatch()
@@ -19,6 +20,7 @@ function ProductList() {
       }))
     }
   }
+  console.log('Products:', products)
 
   if (loading && products.length === 0) {
     return (
@@ -75,41 +77,11 @@ function ProductList() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
             </svg>
             <h3 className="mt-2 text-sm font-medium text-gray-900">No products</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating a new product.</p>
           </div>
         ) : (
           <>
             {products.map((product) => (
-              <div key={product.id} className="px-6 py-4 hover:bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center">
-                      <h4 className="text-sm font-medium text-gray-900">{product.name}</h4>
-                      {product.number && (
-                        <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          SKU: {product.number}
-                        </span>
-                      )}
-                    </div>
-                    {product.description && (
-                      <p className="mt-1 text-sm text-gray-500">{product.description}</p>
-                    )}
-                    {product.images && product.images.length > 0 && (
-                      <div className="mt-2">
-                        <span className="text-xs text-gray-500">
-                          {product.images.length} image(s)
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-right ml-4">
-                    <div className="text-sm text-gray-500">
-                      {product.createdAt && new Date(product.createdAt).toLocaleDateString()}
-                    </div>
-                    <p className="text-xs text-gray-400">ID: {product.id}</p>
-                  </div>
-                </div>
-              </div>
+              <ProductRow key={product.id} name={product.name} number={product.number} id={product.id} />
             ))}
             
             {pagination?.hasNext && (
