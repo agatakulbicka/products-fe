@@ -1,21 +1,21 @@
 import { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useAppSelector, useAppDispatch } from '../store/store'
-import { fetchProductById } from '../store/productsSlice'
+import { fetchProductById } from '../store/currentProductDetails'
 
 function ProductDetailsPage() {
   const { id } = useParams<{ id: string }>()
   const dispatch = useAppDispatch()
-  const { products, loading, error } = useAppSelector((state) => state.products)
+  const { product, loading, error } = useAppSelector((state) => state.currentProductDetails)
   
-  // Find the product in the store or fetch it if not found
-  const product = products.find(p => p.id === id)
+    const state = useAppSelector((state) => state)
+    console.log('Current State::::', state)
 
   useEffect(() => {
-    if (id && !product) {
+    if (id) {
       dispatch(fetchProductById(id))
     }
-  }, [dispatch, id, product])
+  }, [id])
 
   if (loading && !product) {
     return (

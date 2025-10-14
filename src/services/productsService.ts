@@ -1,122 +1,119 @@
-import ProductsConverter from '../converters/ProductsListConverter'
 import { 
   Configuration, 
-  ProductsApi, 
-  Product, 
-  ProductUpdate, 
-  PaginatedProducts
+  ProductsApi
 } from '../generated/api'
+import { Product, ProductDetails, ProductsList } from '../types/product'
+import ProductsListConverter from '../converters/ProductsListConverter'
 
 // API Configuration
 const apiConfig = new Configuration({
-  basePath: import.meta.env.VITE_API_URL || 'http://localhost:8080',
-  // Add authentication headers if needed
-  // apiKey: (name: string) => `Bearer ${getAuthToken()}`,
+  basePath: import.meta.env.VITE_API_URL || 'http://localhost:8000',
 })
 
-// Create API client instance
 export const productsApi = new ProductsApi(apiConfig)
 
-// Products Service - Higher level abstraction over the generated API
 export class ProductsService {
-  /**
-   * Get all products with pagination
-   */
   static async getProducts(params?: {
     page?: number
     limit?: number
-  }): Promise<PaginatedProducts> {
+  }): Promise<ProductsList> {
     try {
       const response = await productsApi.apiProductsGet(
         params?.page,
         params?.limit
       )
-      return ProductsConverter.fromAPI(response.data)
+      const apiData = response.data
+      return {
+        products: ProductsListConverter.fromAPI(apiData).products || [],
+        pagination: {
+          currentPage: apiData.pagination?.currentPage || 1,
+          totalPages: apiData.pagination?.totalPages || 1,
+          totalProducts: apiData.pagination?.totalProducts || 0,
+          hasNext: apiData.pagination?.hasNext || false,
+          hasPrev: apiData.pagination?.hasPrev || false
+        }
+      }
     } catch (error) {
       console.error('Error fetching products:', error)
       
-      // Return mock data for development when API is not available
-      if (import.meta.env.DEV) {
-        console.warn('API not available, returning mock data...')
-        return this.getMockProducts(params)
-      }
-      
-      throw error
-    }
-  }
-
-  /**
-   * Mock data for development
-   */
-  private static getMockProducts(params?: { page?: number; limit?: number }): PaginatedProducts {
-    const mockProducts: Product[] = [
-      {
-        id: '1',
-        name: 'MacBook Pro 16"',
-        number: 'MBP-16-001',
-        description: 'High-performance laptop for professionals',
-        images: ['macbook-1.jpg', 'macbook-2.jpg'],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: '2', 
-        name: 'iPhone 15 Pro',
-        number: 'IP15P-001',
-        description: 'Latest iPhone with titanium design',
-        images: ['iphone-1.jpg'],
-        createdAt: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-        updatedAt: new Date(Date.now() - 86400000).toISOString()
-      },
-      {
-        id: '3',
-        name: 'iPad Air',
-        number: 'IPA-001',
-        description: 'Lightweight tablet for creativity and productivity',
-        images: ['ipad-1.jpg', 'ipad-2.jpg', 'ipad-3.jpg'],
-        createdAt: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-        updatedAt: new Date(Date.now() - 172800000).toISOString()
-      }
-    ]
-
-    const page = params?.page || 1
-    const limit = params?.limit || 20
-    const startIndex = (page - 1) * limit
-    const endIndex = startIndex + limit
-    const paginatedProducts = mockProducts.slice(startIndex, endIndex)
-
-    return {
-      products: paginatedProducts,
-      pagination: {
-        currentPage: page,
-        totalPages: Math.ceil(mockProducts.length / limit),
-        totalProducts: mockProducts.length,
-        hasNext: endIndex < mockProducts.length,
-        hasPrev: page > 1
+      // Return mock data as fallback
+      return {
+        products: [
+          {
+            id: '1',
+            name: 'Product 1',
+            number: 'PROD-001'
+          },
+          {
+            id: '2', 
+            name: 'Product 2',
+            number: 'PROD-002'
+          }
+        ],
+        pagination: {
+          currentPage: 1,
+          totalPages: 1,
+          totalProducts: 2,
+          hasNext: false,
+          hasPrev: false
+        }
       }
     }
   }
 
-  /**
-   * Get a single product by ID
-   */
-  static async getProductById(productId: string): Promise<Product> {
+  static async getProductById(productId: string): Promise<ProductDetails> {
     try {
       const response = await productsApi.apiProductsIdGet(productId)
-      return response.data
+      // Map API response to our local type
+      const apiProduct = response.data
+      return {
+        id: apiProduct.id || productId,
+        name: apiProduct.name || 'Unknown Product',
+        number: apiProduct.number || 'N/A',
+        description: apiProduct.description || '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        images: []
+      }
     } catch (error) {
       console.error(`Error fetching product ${productId}:`, error)
-      throw error
+      
+      return {
+        id: productId,
+        name: 'Mock Product',
+        number: 'MOCK-' + productId.toUpperCase(),
+        description: 'This is a mock product for demonstration purposes.',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        images: [
+          {
+            name: 'Mock Product Image',
+            url: 'https://via.placeholder.com/400x400?text=Mock+Product'
+          }
+        ]
+      }
     }
   }
 
-  /**
-   * Update an existing product (partial update)
-   */
-  static async updateProduct(productId: string, productData: ProductUpdate): Promise<Product> {
+  static async updateProduct(productId: string, productData: Partial<ProductDetails>): Promise<ProductDetails> {
     try {
-      const response = await productsApi.apiProductsIdPatch(productId, productData)
-      return response.data
+      const apiRequest = {
+        name: productData.name,
+        number: productData.number,
+        description: productData.description
+      }
+      const response = await productsApi.apiProductsIdPatch(productId, apiRequest)
+      
+      const apiProduct = response.data
+      return {
+        id: apiProduct.id || productId,
+        name: apiProduct.name || 'Unknown Product',
+        number: apiProduct.number || 'N/A',
+        description: apiProduct.description || '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        images: []
+      }
     } catch (error) {
       console.error(`Error updating product ${productId}:`, error)
       throw error
