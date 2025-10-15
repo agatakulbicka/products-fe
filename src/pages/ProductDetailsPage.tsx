@@ -40,10 +40,11 @@ function ProductDetailsPage() {
     }
   }, [id])
 
-  const handleOnSave = async (data) => {
+  const handleOnSave = async (data: ProductFormData) => {
     //save await
-    await dispatch(updateProduct({productId: data.id, productData: data}))
-    await dispatch(fetchProductById(data.id))
+    if (!id) return
+    await dispatch(updateProduct({productId: id, productData: data}))
+    await dispatch(fetchProductById(id))
     setIsEditing(false)
 
   }

@@ -3,6 +3,7 @@ export interface ProductFormData {
   number: string
   description: string
   images: ProductImageFormData[]
+  id: string
 }
 
 export interface ProductImageFormData {

@@ -94,18 +94,12 @@ export class ProductsService {
         number: productData.number,
         description: productData.description
       }
-      const response = await productsApi.apiProductsIdPatch(productId, apiRequest)
-      
+      const dataToSave = ProductDetailsConverter.toAPI(apiRequest)
+      console.log('Data to save:', dataToSave)
+      const response = await productsApi.apiProductsIdPatch(productId, dataToSave)
+
       const apiProduct = response.data
-      return {
-        id: apiProduct.id || productId,
-        name: apiProduct.name || 'Unknown Product',
-        number: apiProduct.number || 'N/A',
-        description: apiProduct.description || '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        images: []
-      }
+      return ProductDetailsConverter.fromAPI(apiProduct)
     } catch (error) {
       console.error(`Error updating product ${productId}:`, error)
       throw error

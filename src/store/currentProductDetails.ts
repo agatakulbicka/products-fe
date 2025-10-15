@@ -13,6 +13,7 @@ export const fetchProductById = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   'currentProductDetails/updateProduct',
   async ({ productId, productData }: { productId: string; productData: Partial<ProductDetails> }) => {
+    console.log('Updating product with data:', productData, productId )
     const response = await ProductsService.updateProduct(productId, productData)
     return response
   }
