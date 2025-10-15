@@ -83,13 +83,23 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                         {/* Images */}
                         <div>
                             <div className="flex justify-between items-center mb-3">
-                                <label className="block text-sm font-medium text-gray-700">
-                                    Product Images
-                                </label>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">
+                                        Product Images
+                                    </label>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Maximum 12 images ({fields.length}/12)
+                                    </p>
+                                </div>
                                 <button
                                     type="button"
                                     onClick={() => append({ name: '', url: '' })}
-                                    className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                    disabled={fields.length >= 12}
+                                    className={`px-3 py-1 text-sm rounded-md transition-colors ${
+                                        fields.length >= 12
+                                            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                                    }`}
                                 >
                                     Add Image
                                 </button>
@@ -152,6 +162,14 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                                         >
                                             Add your first image
                                         </button>
+                                    </div>
+                                )}
+                                
+                                {fields.length >= 12 && (
+                                    <div className="text-center py-4 px-4 bg-amber-50 border border-amber-200 rounded-md">
+                                        <p className="text-sm text-amber-700">
+                                            Maximum number of images reached (12/12). Remove an image to add a new one.
+                                        </p>
                                     </div>
                                 )}
                             </div>
