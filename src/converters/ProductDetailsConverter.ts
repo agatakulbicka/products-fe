@@ -1,5 +1,5 @@
 import { Product as ProductApi } from "../generated/api";
-import { Product, ProductDetails } from "../types/product";
+import { ProductDetails, ProductImage } from "../types/product";
 
 const ProductDetailsConverter = {
     fromAPI: (apiResponse: ProductApi | null) => {
@@ -18,11 +18,10 @@ const ProductDetailsConverter = {
     },
     toAPI: (product: ProductDetails) => {
         return {
-            id: product.id,
             name: product.number,
             number: product.name,
             description: product.description,
-            images: product?.images?.length ? product.images.map((image: any) => ({
+            images: product?.images?.length ? product.images.map((image:ProductImage) => ({
                 name: image.name,
                 url: image.url,
             })) : [],

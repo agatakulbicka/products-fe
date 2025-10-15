@@ -2,7 +2,7 @@ import {
   Configuration, 
   ProductsApi
 } from '../generated/api'
-import { Product, ProductDetails, ProductsList } from '../types/product'
+import { ProductDetails, ProductsList } from '../types/product'
 import ProductsListConverter from '../converters/ProductsListConverter'
 import ProductDetailsConverter from '../converters/ProductDetailsConverter'
 
@@ -92,7 +92,8 @@ export class ProductsService {
       const apiRequest = {
         name: productData.name,
         number: productData.number,
-        description: productData.description
+        description: productData.description,
+        images: productData.images || [],
       }
       const dataToSave = ProductDetailsConverter.toAPI(apiRequest)
       console.log('Data to save:', dataToSave)
