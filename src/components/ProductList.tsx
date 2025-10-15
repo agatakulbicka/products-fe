@@ -4,6 +4,7 @@ import { fetchProducts } from '../store/productsSlice'
 import { setProductListItemsPerPage, setProductListCurrentPage } from '../store/settingsSlice'
 import ProductRow from './ProductRow'
 import Loader from './Loader'
+import Pagination from './pagination/Pagination'
 
 function ProductList() {
   const dispatch = useAppDispatch()
@@ -22,69 +23,6 @@ function ProductList() {
   const handleItemsPerPageChange = (newLimit: number) => {
     dispatch(setProductListItemsPerPage(newLimit))
     dispatch(fetchProducts({ page: 1, limit: newLimit }))
-  }
-
-  const renderPaginationButtons = () => {
-    if (!pagination) return null
-
-    const { currentPage, totalPages } = pagination
-    const buttons = []
-
-    if (currentPage > 3) {
-      buttons.push(
-        <button
-          key={1}
-          onClick={() => handlePageChange(1)}
-          className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-        >
-          1
-        </button>
-      )
-      if (currentPage > 4) {
-        buttons.push(
-          <span key="ellipsis1" className="px-3 py-2 text-sm text-gray-500">
-            ...
-          </span>
-        )
-      }
-    }
-
-    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-      buttons.push(
-        <button
-          key={i}
-          onClick={() => handlePageChange(i)}
-          className={`px-3 py-2 text-sm border ${i === currentPage
-              ? 'border-blue-500 bg-blue-600 text-white'
-              : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-        >
-          {i}
-        </button>
-      )
-    }
-
-    // Always show last page
-    if (currentPage < totalPages - 2) {
-      if (currentPage < totalPages - 3) {
-        buttons.push(
-          <span key="ellipsis2" className="px-3 py-2 text-sm text-gray-500">
-            ...
-          </span>
-        )
-      }
-      buttons.push(
-        <button
-          key={totalPages}
-          onClick={() => handlePageChange(totalPages)}
-          className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-        >
-          {totalPages}
-        </button>
-      )
-    }
-
-    return buttons
   }
 
   if (loading && products.length === 0) {
@@ -165,34 +103,12 @@ function ProductList() {
             ))}
 
             {pagination && pagination.totalPages > 1 && (
-              <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
-                    Showing {((pagination.currentPage - 1) * itemsPerPage) + 1} to{' '}
-                    {Math.min(pagination.currentPage * itemsPerPage, pagination.totalProducts)} of{' '}
-                    {pagination.totalProducts} results
-                  </div>
-
-                  <div className="flex items-center space-x-1">
-                    <button
-                      onClick={() => handlePageChange(pagination.currentPage - 1)}
-                      disabled={pagination.currentPage === 1 || loading}
-                      className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-l-md"
-                    >
-                      Previous
-                    </button>
-                    {renderPaginationButtons()}
-
-                    <button
-                      onClick={() => handlePageChange(pagination.currentPage + 1)}
-                      disabled={pagination.currentPage === pagination.totalPages || loading}
-                      className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-r-md"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <Pagination
+                pagination={pagination}
+                itemsPerPage={itemsPerPage}
+                loading={loading}
+                handlePageChange={handlePageChange}
+              />
             )}
           </>
         )}
