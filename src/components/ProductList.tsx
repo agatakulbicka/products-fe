@@ -1,31 +1,95 @@
 import { useEffect } from 'react'
 import { useAppSelector, useAppDispatch } from '../store/store'
 import { fetchProducts } from '../store/productsSlice'
+import { setProductListItemsPerPage, setProductListCurrentPage } from '../store/settingsSlice'
 import ProductRow from './ProductRow'
+import Loader from './Loader'
 
 function ProductList() {
   const dispatch = useAppDispatch()
   const { products, loading, error, pagination } = useAppSelector((state) => state.products)
+  const { itemsPerPage, currentPage } = useAppSelector((state) => state.settings.productList)
 
   useEffect(() => {
-    // Fetch products when component mounts
-    dispatch(fetchProducts({ page: 1, limit: 20 }))
-  }, [dispatch])
+    dispatch(fetchProducts({ page: currentPage, limit: itemsPerPage }))
+  }, [dispatch, currentPage, itemsPerPage])
 
-  const handleLoadMore = () => {
-    if (pagination?.hasNext) {
-      dispatch(fetchProducts({ 
-        page: pagination.currentPage + 1, 
-        limit: 20 
-      }))
+  const handlePageChange = (page: number) => {
+    dispatch(setProductListCurrentPage(page))
+    dispatch(fetchProducts({ page, limit: itemsPerPage }))
+  }
+
+  const handleItemsPerPageChange = (newLimit: number) => {
+    dispatch(setProductListItemsPerPage(newLimit))
+    dispatch(fetchProducts({ page: 1, limit: newLimit }))
+  }
+
+  const renderPaginationButtons = () => {
+    if (!pagination) return null
+
+    const { currentPage, totalPages } = pagination
+    const buttons = []
+
+    if (currentPage > 3) {
+      buttons.push(
+        <button
+          key={1}
+          onClick={() => handlePageChange(1)}
+          className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+        >
+          1
+        </button>
+      )
+      if (currentPage > 4) {
+        buttons.push(
+          <span key="ellipsis1" className="px-3 py-2 text-sm text-gray-500">
+            ...
+          </span>
+        )
+      }
     }
+
+    for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+      buttons.push(
+        <button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          className={`px-3 py-2 text-sm border ${i === currentPage
+              ? 'border-blue-500 bg-blue-600 text-white'
+              : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+            }`}
+        >
+          {i}
+        </button>
+      )
+    }
+
+    // Always show last page
+    if (currentPage < totalPages - 2) {
+      if (currentPage < totalPages - 3) {
+        buttons.push(
+          <span key="ellipsis2" className="px-3 py-2 text-sm text-gray-500">
+            ...
+          </span>
+        )
+      }
+      buttons.push(
+        <button
+          key={totalPages}
+          onClick={() => handlePageChange(totalPages)}
+          className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+        >
+          {totalPages}
+        </button>
+      )
+    }
+
+    return buttons
   }
 
   if (loading && products.length === 0) {
     return (
-      <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
+      <Loader />
     )
   }
 
@@ -40,7 +104,7 @@ function ProductList() {
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-1">Error loading products</h3>
           <p className="text-sm text-gray-500">{error}</p>
-          <button 
+          <button
             onClick={() => dispatch(fetchProducts({ page: 1, limit: 20 }))}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
@@ -61,14 +125,31 @@ function ProductList() {
               {pagination ? `${pagination.totalProducts} products total` : 'Manage your product inventory'}
             </p>
           </div>
-          {pagination && (
-            <div className="text-sm text-gray-500">
-              Page {pagination.currentPage} of {pagination.totalPages}
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
+              <label htmlFor="itemsPerPage" className="text-sm text-gray-700">
+                Items per page:
+              </label>
+              <select
+                id="itemsPerPage"
+                value={itemsPerPage}
+                onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+                className="border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+              </select>
             </div>
-          )}
+            {pagination && (
+              <div className="text-sm text-gray-500">
+                Page {pagination.currentPage} of {pagination.totalPages}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      
+
       <div className="divide-y divide-gray-200">
         {products.length === 0 ? (
           <div className="px-6 py-8 text-center text-gray-500">
@@ -82,16 +163,35 @@ function ProductList() {
             {products.map((product) => (
               <ProductRow key={product.id} name={product.name} number={product.number} id={product.id} />
             ))}
-            
-            {pagination?.hasNext && (
+
+            {pagination && pagination.totalPages > 1 && (
               <div className="px-6 py-4 border-t border-gray-200 bg-gray-50">
-                <button
-                  onClick={handleLoadMore}
-                  disabled={loading}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {loading ? 'Loading...' : 'Load More Products'}
-                </button>
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-gray-700">
+                    Showing {((pagination.currentPage - 1) * itemsPerPage) + 1} to{' '}
+                    {Math.min(pagination.currentPage * itemsPerPage, pagination.totalProducts)} of{' '}
+                    {pagination.totalProducts} results
+                  </div>
+
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => handlePageChange(pagination.currentPage - 1)}
+                      disabled={pagination.currentPage === 1 || loading}
+                      className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-l-md"
+                    >
+                      Previous
+                    </button>
+                    {renderPaginationButtons()}
+
+                    <button
+                      onClick={() => handlePageChange(pagination.currentPage + 1)}
+                      disabled={pagination.currentPage === pagination.totalPages || loading}
+                      className="px-3 py-2 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-r-md"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </>
