@@ -3,16 +3,14 @@ import { ProductFormData } from "../../types/forms"
 
 interface CardEditHeaderProps {
     onCancel: () => void;
+    name: string;
 }
 
-const CardEditHeader = ({ onCancel }: CardEditHeaderProps) => {
+const CardEditHeader = ({ onCancel, name }: CardEditHeaderProps) => {
     const {
         formState: { isDirty, isValid, isSubmitting },
         reset,
-        watch
     } = useFormContext<ProductFormData>()
-
-    const productName = watch('name') || 'Untitled Product'
 
     const handleReset = () => {
         if (isDirty && window.confirm('Are you sure you want to reset all changes?')) {
@@ -25,7 +23,7 @@ const CardEditHeader = ({ onCancel }: CardEditHeaderProps) => {
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">
-                        Edit: {productName}
+                        Edit: {name}
                     </h1>
                     <p className="mt-1 text-sm text-gray-500">
                         Make changes to product information
