@@ -6,7 +6,7 @@ interface CardEditHeaderProps {
 }
 
 const CardEditHeader = ({ onCancel }: CardEditHeaderProps) => {
-    const { 
+    const {
         formState: { isDirty, isValid, isSubmitting },
         reset,
         watch
@@ -31,7 +31,7 @@ const CardEditHeader = ({ onCancel }: CardEditHeaderProps) => {
                         Make changes to product information
                     </p>
                 </div>
-                
+
                 <div className="flex space-x-3">
                     {isDirty && (
                         <button
@@ -42,7 +42,7 @@ const CardEditHeader = ({ onCancel }: CardEditHeaderProps) => {
                             Reset
                         </button>
                     )}
-                    
+
                     <button
                         type="button"
                         onClick={onCancel}
@@ -50,25 +50,24 @@ const CardEditHeader = ({ onCancel }: CardEditHeaderProps) => {
                     >
                         Cancel
                     </button>
-                    
+
                     <button
                         type="submit"
                         disabled={!isDirty || !isValid || isSubmitting}
-                        className={`px-4 py-2 rounded-md transition-colors ${
-                            !isDirty || !isValid || isSubmitting
+                        className={`px-4 py-2 rounded-md transition-colors ${!isDirty || !isValid || isSubmitting
                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 : 'bg-blue-600 text-white hover:bg-blue-700'
-                        }`}
+                            }`}
                     >
                         {isSubmitting ? 'Saving...' : 'Save Changes'}
                     </button>
                 </div>
             </div>
-            
-            {/* Status indicator */}
+
+
             {isDirty && (
                 <div className="mt-2 text-xs text-amber-600">
-                    • Unsaved changes
+                    Unsaved changes
                 </div>
             )}
         </div>

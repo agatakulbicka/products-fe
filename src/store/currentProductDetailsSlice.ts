@@ -13,7 +13,6 @@ export const fetchProductById = createAsyncThunk(
 export const updateProduct = createAsyncThunk(
   'currentProductDetails/updateProduct',
   async ({ productId, productData }: { productId: string; productData: Partial<ProductDetails> }) => {
-    console.log('Updating product with data:', productData, productId )
     const response = await ProductsService.updateProduct(productId, productData)
     return response
   }
@@ -40,6 +39,11 @@ const setCurrentProductDetailsSlice = createSlice({
         },
         setCurrentProductDetails: (state, action: PayloadAction<ProductDetails | null>) => {
             state.product = action.payload
+        },
+        clearCurrentProductDetails: (state) => {
+            state.product = null
+            state.error = null
+            state.loading = false
         },
     },
     extraReducers: (builder) => {
@@ -91,5 +95,5 @@ const setCurrentProductDetailsSlice = createSlice({
     },
 })
 
-export const { clearCurrentProductDetailsError, setCurrentProductDetails } = setCurrentProductDetailsSlice.actions
+export const { clearCurrentProductDetailsError, setCurrentProductDetails, clearCurrentProductDetails } = setCurrentProductDetailsSlice.actions
 export default setCurrentProductDetailsSlice.reducer

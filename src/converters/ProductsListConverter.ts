@@ -1,6 +1,4 @@
-import { PaginatedProducts as PaginatedProductsApi } from "../generated/api";
-// import { Product, ProductDetails, ProductsPagination } from "../types/product";
-
+import type { PaginatedProducts as PaginatedProductsApi } from '../services/productsService';
 
 const ProductsListConverter = {
   fromAPI(apiResponse: PaginatedProductsApi) {

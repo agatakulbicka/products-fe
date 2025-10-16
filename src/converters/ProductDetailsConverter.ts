@@ -1,4 +1,4 @@
-import { Product as ProductApi } from "../generated/api";
+import type { Product as ProductApi } from'../services/productsService';
 import { ProductDetails, ProductImage } from "../types/product";
 
 const ProductDetailsConverter = {

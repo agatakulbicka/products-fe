@@ -21,8 +21,6 @@ const CardEdit = ({ product, onCancel, onSave }: CardEditProps) => {
   const { handleSubmit } = useFormContext<ProductFormData>()
 
   const onSubmit = (data: ProductFormData) => {
-    console.log('Form submitted:', data)
-    // TODO: Handle form submission - dispatch to Redux store
     onSave && onSave(data)
   }
 

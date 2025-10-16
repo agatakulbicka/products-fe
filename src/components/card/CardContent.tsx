@@ -10,10 +10,8 @@ interface CardContentProps {
 const CardContent = ({ description, images, number, createdAt, updatedAt, id }: CardContentProps) => (
     <div className="px-6 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Content */}
             <div className="lg:col-span-2">
                 <div className="space-y-6">
-                    {/* Description */}
                     <div>
                         <h3 className="text-lg font-medium text-gray-900 mb-3">Description</h3>
                         <div className="bg-gray-50 rounded-lg p-4">
@@ -24,8 +22,6 @@ const CardContent = ({ description, images, number, createdAt, updatedAt, id }: 
                             )}
                         </div>
                     </div>
-
-                    {/* Images */}
                     {images && images.length > 0 && (
                         <div>
                             <h3 className="text-lg font-medium text-gray-900 mb-3">Images</h3>
@@ -61,8 +57,6 @@ const CardContent = ({ description, images, number, createdAt, updatedAt, id }: 
                     )}
                 </div>
             </div>
-
-            {/* Sidebar */}
             <div className="lg:col-span-1">
                 <div className="bg-gray-50 rounded-lg p-6">
                     <h3 className="text-lg font-medium text-gray-900 mb-4">Product Information</h3>

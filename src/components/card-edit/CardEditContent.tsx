@@ -23,10 +23,8 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
     return (
         <div className="px-6 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main Content */}
                 <div className="lg:col-span-2">
                     <div className="space-y-6">
-                        {/* Product Name */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Product Name *
@@ -44,10 +42,9 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                             )}
                         </div>
 
-                        {/* Product Number */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Product Number/SKU *
+                                Product Number*
                             </label>
                             <input
                                 {...register('number', productValidationRules.number)}
@@ -62,7 +59,6 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                             )}
                         </div>
 
-                        {/* Description */}
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Description
@@ -79,8 +75,6 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                                 <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
                             )}
                         </div>
-
-                        {/* Images */}
                         <div>
                             <div className="flex justify-between items-center mb-3">
                                 <div>
@@ -176,8 +170,6 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                         </div>
                     </div>
                 </div>
-
-                {/* Sidebar */}
                 <div className="lg:col-span-1">
                     <div className="bg-gray-50 rounded-lg p-6">
                         <h3 className="text-lg font-medium text-gray-900 mb-4">Product Information</h3>

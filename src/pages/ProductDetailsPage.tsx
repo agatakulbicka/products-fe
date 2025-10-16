@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useForm, FormProvider } from 'react-hook-form'
 import { useAppSelector, useAppDispatch } from '../store/store'
-import { fetchProductById, updateProduct } from '../store/currentProductDetails'
+import { fetchProductById, updateProduct, clearCurrentProductDetails } from '../store/currentProductDetailsSlice'
 import { ProductFormData } from '../types/forms'
 import Loader from '../components/Loader'
 import ProductDetailsError from '../components/ProductDetailsError'
@@ -17,7 +17,6 @@ function ProductDetailsPage() {
   const { product, loading, error } = useAppSelector((state) => state.currentProductDetails)
   const [isEditing, setIsEditing] = useState(false)
 
-  // Initialize form methods for product editing
   const methods = useForm<ProductFormData>({
     defaultValues: {
       name: product?.name || '',
@@ -31,17 +30,16 @@ function ProductDetailsPage() {
     mode: 'onChange'
   })
 
-  const state = useAppSelector((state) => state)
-  console.log('Current State::::', state)
-
   useEffect(() => {
     if (id) {
       dispatch(fetchProductById(id))
     }
-  }, [id])
+        return () => {
+      dispatch(clearCurrentProductDetails())
+    }
+  }, [id, dispatch])
 
   const handleOnSave = async (data: ProductFormData) => {
-    //save await
     if (!id) return
     await dispatch(updateProduct({productId: id, productData: data}))
     await dispatch(fetchProductById(id))

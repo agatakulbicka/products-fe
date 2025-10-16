@@ -108,7 +108,6 @@ export class ProductsService {
   }
 }
 
-// Export types for use in components
 export type { 
   Product, 
   ProductUpdate,
