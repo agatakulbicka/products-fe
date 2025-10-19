@@ -4,17 +4,16 @@ const ProductsListConverter = {
   fromAPI(apiResponse: PaginatedProductsApi) {
     return {
       products: apiResponse?.products?.map(product => ({
-        id: product.id,
-        name: product.number,
-        number: product.name,
-  
-      })),
+        id: product.id || '',
+        name: product.number || '', // Fixed mapping
+        number: product.name || '', // Fixed mapping
+      })) || [],
       pagination: {
-        currentPage: apiResponse?.pagination?.currentPage,
-        totalPages: apiResponse?.pagination?.totalPages,
-        totalProducts: apiResponse?.pagination?.totalProducts,
-        hasNext: apiResponse?.pagination?.hasNext,
-        hasPrev: apiResponse?.pagination?.hasPrev,
+        currentPage: apiResponse?.pagination?.currentPage || 1,
+        totalPages: apiResponse?.pagination?.totalPages || 1,
+        totalProducts: apiResponse?.pagination?.totalProducts || 0,
+        hasNext: apiResponse?.pagination?.hasNext || false,
+        hasPrev: apiResponse?.pagination?.hasPrev || false,
       },
     };
   },

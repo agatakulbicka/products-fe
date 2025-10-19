@@ -180,7 +180,7 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                             </div>
                             {number && (
                                 <div>
-                                    <dt className="text-sm font-medium text-gray-500">SKU/Number</dt>
+                                    <dt className="text-sm font-medium text-gray-500">Number</dt>
                                     <dd className="mt-1 text-sm text-gray-900">{number}</dd>
                                 </div>
                             )}

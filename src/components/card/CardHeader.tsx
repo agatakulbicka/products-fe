@@ -9,7 +9,7 @@ const CardHeader = ({ name, number, onClick }: CardHeaderProps) => <div classNam
         <div>
             <h1 className="text-2xl font-bold text-gray-900">{name}</h1>
             {number && (
-                <p className="mt-1 text-sm text-gray-500">SKU: {number}</p>
+                <p className="mt-1 text-sm text-gray-500">Number: {number}</p>
             )}
         </div>
         <div className="flex space-x-2">

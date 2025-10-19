@@ -7,15 +7,10 @@
     "dev": "npm run generate:api && vite",
     "build": "npm run generate:api && tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
     "type-check": "tsc --noEmit",
     "test": "vitest",
-    "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage",
     "generate:api": "openapi-generator-cli generate -i api/openapi.yaml -g typescript-axios -o src/generated/api --additional-properties=supportsES6=true,withInterfaces=true,modelPropertyNaming=camelCase",
-    "generate:api-clean": "rm -rf src/generated && npm run generate:api",
-    "prebuild": "npm run generate:api"
   },
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.25.0",
