@@ -74,7 +74,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
-    patch:
+    put:
       summary: Update product fields (partial update)
       tags: [Products]
       parameters:

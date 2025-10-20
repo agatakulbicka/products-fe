@@ -1,5 +1,5 @@
 import type { Product as ProductApi } from'../services/productsService';
-import { ProductDetails, ProductImage } from "../types/product";
+import { ProductDetails, ProductImage, UpdatedProductDetails } from "../types/product";
 
 const ProductDetailsConverter = {
     fromAPI: (apiResponse: ProductApi | null): ProductDetails => {
@@ -16,7 +16,7 @@ const ProductDetailsConverter = {
             createdAt: apiResponse?.createdAt || new Date().toISOString(),
         }
     },
-    toAPI: (product: ProductDetails): ProductApi => {
+    toAPI: (product: UpdatedProductDetails): ProductApi => {
         return {
             name: product.number,   // Fixed mapping
             number: product.name,   // Fixed mapping

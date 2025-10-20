@@ -17,6 +17,10 @@ export const productValidationRules = {
     minLength: {
       value: 2,
       message: 'Product name must be at least 2 characters'
+    },
+    maxLength: {
+      value: 50,
+      message: 'Product name cannot exceed 50 characters'
     }
   },
   number: {
@@ -27,9 +31,25 @@ export const productValidationRules = {
     }
   },
   description: {
+    required: 'Product description is required',
+    minLength: {
+      value: 2,
+      message: 'Description must be at least 2 characters'
+    },
     maxLength: {
-      value: 1000,
-      message: 'Description cannot exceed 1000 characters'
+      value: 500,
+      message: 'Description cannot exceed 500 characters'
+    }
+  },
+  imageName: {
+    required: 'Image name is required',
+    minLength: {
+      value: 2,
+      message: 'Image name must be at least 2 characters'
+    },
+    maxLength: {
+      value: 30,
+      message: 'Image name cannot exceed 30 characters'
     }
   },
   imageUrl: {

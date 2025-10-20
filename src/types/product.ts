@@ -13,8 +13,15 @@ export interface Product {
 export interface ProductDetails extends Product {
   description: string;
   images?: ProductImage[];
-  updatedAt: string; 
+  updatedAt?: string; 
   createdAt?: string;
+}
+
+export interface UpdatedProductDetails {
+  name: string;
+  number: string;
+  description: string;
+  images: ProductImage[];
 }
 
 export interface ProductsPagination {

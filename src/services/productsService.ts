@@ -1,9 +1,8 @@
 import { 
   Configuration, 
   ProductsApi,
-  ProductUpdate
 } from '../generated/api'
-import { ProductDetails, ProductsList } from '../types/product'
+import { ProductDetails, ProductsList, UpdatedProductDetails } from '../types/product'
 import ProductsListConverter from '../converters/ProductsListConverter'
 import ProductDetailsConverter from '../converters/ProductDetailsConverter'
 
@@ -51,27 +50,9 @@ export class ProductsService {
     }
   }
 
-  static async updateProduct(productId: string, productData: Partial<ProductDetails>): Promise<ProductDetails> {
+  static async updateProduct(productId: string, productData: UpdatedProductDetails): Promise<ProductDetails> {
     try {
-      const updatePayload: ProductUpdate = {}
-      
-      if (productData.name !== undefined) {
-        updatePayload.name = productData.name
-      }
-      if (productData.number !== undefined) {
-        updatePayload.number = productData.number
-      }
-      if (productData.description !== undefined) {
-        updatePayload.description = productData.description
-      }
-      if (productData.images !== undefined) {
-        updatePayload.images = productData.images.map(image => ({
-          name: image.name,
-          url: image.url
-        }))
-      }
-
-      const response = await productsApi.apiProductsIdPatch(productId, ProductDetailsConverter.toAPI(updatePayload));
+      const response = await productsApi.apiProductsIdPut(productId, ProductDetailsConverter.toAPI(productData))
       const apiProduct = response.data
       return ProductDetailsConverter.fromAPI(apiProduct)
     } catch (error) {

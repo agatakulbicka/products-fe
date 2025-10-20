@@ -27,11 +27,11 @@ const CardEdit = ({ product, onCancel, onSave }: CardEditProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        <CardEditHeader 
+        <CardEditHeader
           name={product.name}
           onCancel={() => onCancel && onCancel()}
         />
-        <CardEditContent 
+        <CardEditContent
           number={product.number}
           createdAt={product.createdAt}
           updatedAt={product.updatedAt}

@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { ProductsService } from '../services/productsService'
-import { ProductDetails } from '../types/product'
-import ProductDetailsConverter from '../converters/ProductDetailsConverter'
+import { ProductDetails, UpdatedProductDetails } from '../types/product'
 
 export const fetchProductById = createAsyncThunk(
     'products/fetchProductById',
@@ -13,7 +12,7 @@ export const fetchProductById = createAsyncThunk(
 
 export const updateProduct = createAsyncThunk(
   'currentProductDetails/updateProduct',
-  async ({ productId, productData }: { productId: string; productData: Partial<ProductDetails> }) => {
+  async ({ productId, productData }: { productId: string; productData: UpdatedProductDetails }) => {
     const response = await ProductsService.updateProduct(productId, productData)
     return response
   }
@@ -48,7 +47,6 @@ const setCurrentProductDetailsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        // Fetch single product
         builder
             .addCase(fetchProductById.pending, (state) => {
                 state.loading = true
@@ -56,22 +54,13 @@ const setCurrentProductDetailsSlice = createSlice({
             })
             .addCase(fetchProductById.fulfilled, (state, action) => {
                 state.loading = false
-                state.product = {
-                    id: action.payload.id || '',
-                    name: action.payload.name ?? '',
-                    number: action.payload.number ?? '',
-                    updatedAt: action.payload.updatedAt || new Date().toISOString(),
-                    createdAt: action.payload.createdAt || new Date().toISOString(),
-                    description: action.payload.description ?? '',
-                    images: action.payload.images ?? []
-                }
+                state.product = action.payload
             })
             .addCase(fetchProductById.rejected, (state, action) => {
                 state.loading = false
                 state.error = action.error.message || 'Failed to fetch product'
             })
 
-        // Update product
         builder
             .addCase(updateProduct.pending, (state) => {
                 state.loading = true
@@ -79,15 +68,7 @@ const setCurrentProductDetailsSlice = createSlice({
             })
             .addCase(updateProduct.fulfilled, (state, action) => {
                 state.loading = false
-                state.product = {
-                    id: action.payload.id || '',
-                    name: action.payload.name ?? '',
-                    number: action.payload.number ?? '',
-                    updatedAt: action.payload.updatedAt || new Date().toISOString(),
-                    createdAt: action.payload.createdAt || new Date().toISOString(),
-                    description: action.payload.description ?? '',
-                    images: action.payload.images ?? []
-                }
+                state.product = action.payload
             })
             .addCase(updateProduct.rejected, (state, action) => {
                 state.loading = false

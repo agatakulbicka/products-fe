@@ -61,7 +61,7 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
 
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Description
+                                Description *
                             </label>
                             <textarea
                                 {...register('description', productValidationRules.description)}
@@ -116,14 +116,19 @@ const CardContent = ({ number, createdAt, updatedAt, id }: CardContentProps) => 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                             <div>
                                                 <label className="block text-xs font-medium text-gray-600 mb-1">
-                                                    Image Name
+                                                    Image Name *
                                                 </label>
                                                 <input
-                                                    {...register(`images.${index}.name` as const)}
+                                                    {...register(`images.${index}.name` as const, productValidationRules.imageName)}
                                                     type="text"
                                                     className="w-full px-2 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
                                                     placeholder="Image name or alt text"
                                                 />
+                                                {errors.images?.[index]?.name && (
+                                                    <p className="mt-1 text-xs text-red-600">
+                                                        {errors.images[index]?.name?.message}
+                                                    </p>
+                                                )}
                                             </div>
                                             
                                             <div>
