@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
-    "generate:api": "openapi-generator-cli generate -i api/openapi.yaml -g typescript-axios -o src/generated/api --additional-properties=supportsES6=true,withInterfaces=true,modelPropertyNaming=camelCase",
+    "generate:api": "openapi-generator-cli generate -i api/openapi.yaml -g typescript-axios -o src/generated/api --additional-properties=supportsES6=true,withInterfaces=true,modelPropertyNaming=camelCase"
   },
   "dependencies": {
     "@openapitools/openapi-generator-cli": "^2.25.0",

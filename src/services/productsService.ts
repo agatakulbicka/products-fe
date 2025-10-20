@@ -71,7 +71,7 @@ export class ProductsService {
         }))
       }
 
-      const response = await productsApi.apiProductsIdPatch(productId, updatePayload)
+      const response = await productsApi.apiProductsIdPatch(productId, ProductDetailsConverter.toAPI(updatePayload));
       const apiProduct = response.data
       return ProductDetailsConverter.fromAPI(apiProduct)
     } catch (error) {
