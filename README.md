@@ -34,6 +34,12 @@ Follow BE readme instruction to run entire flow: https://github.com/agatakulbick
 
 ##  OTHERS
 
+### Testing
+Run tests:
+```bash
+npm run test
+```
+
 ### Code Quality
 Run ESLint to check code quality:
 ```bash
@@ -45,7 +51,8 @@ Run TypeScript type checking:
 npm run type-check
 ```
 
-Openapi itself:
+### OpenAPI
+Generate:
 ```bash
 npm run generate:api
 ```
